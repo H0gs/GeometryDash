@@ -1,1 +1,32 @@
 <!DOCTYPE html>
+<div id="main"></div>
+<img id="player" src="./playerpng.png" style="height: 5%; width: 5%; position: absolute;">
+<script>
+    const main = document.getElementById("main");
+    let layer1 = [1,1,1,1,1,1]
+
+    for(let i = 0; i < layer1.length; i++){
+        console.log("UWU")
+        let block = document.createElement("img")
+        block.src = "./block1.png";
+        block.style.position = "absolute"
+        block.style.left = i*50+"px"
+        block.style.height = 50+"px"
+        block.style.width = 50+"px"
+        main.appendChild(block)
+    }
+
+
+    let speed = 1
+    let player = document.getElementById("player")
+    function gravity(){
+        setTimeout(() => {
+            player.style.left = speed+"px"
+            speed += 50
+            console.log("Hi")
+            gravity()
+        }, 500);
+        
+    }
+    gravity()
+</script>
