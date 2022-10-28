@@ -1,32 +1,149 @@
 <!DOCTYPE html>
-<div id="main"></div>
-<img id="player" src="./playerpng.png" style="height: 5%; width: 5%; position: absolute;">
+<div id="main" style="position: absolute;"></div>
+<div id="map" style="position: absolute;"></div>
+<!-- <img id="player" src="./playerpng.png" style="height: 50px; width: 50px; position: absolute; top: 550px;"> -->
 <script>
     const main = document.getElementById("main");
-    let layer1 = [1,1,1,1,1,1]
-
-    for(let i = 0; i < layer1.length; i++){
-        console.log("UWU")
-        let block = document.createElement("img")
-        block.src = "./block1.png";
-        block.style.position = "absolute"
-        block.style.left = i*50+"px"
-        block.style.height = 50+"px"
-        block.style.width = 50+"px"
-        main.appendChild(block)
+    const map = document.getElementById("map");
+    let rotation = 0
+    let dead = false
+    size = 50
+    let layers = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 1, 1, 1, 2, 2, 1, 2, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 2, 1, 1, 1, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1]
+    ]
+    let touchingGround = false
+    let playerx = 0
+    let playery = 0
+    
+    
+    for(let q = 0; q < layers.length; q++){
+        for(let i = 0; i < layers[q].length; i++){
+            console.log("UWU")
+            if(layers[q][i] == 1){
+                let block = document.createElement("img")
+                block.src = "./block1.png";
+                block.style.position = "absolute"
+                block.style.top = q*size+"px";
+                block.style.left = i*size+"px"
+                block.style.height = size+"px"
+                block.style.width = size+"px"
+                map.appendChild(block)
+            }else{
+                if(layers[q][i] == 2){
+                    let block = document.createElement("img")
+                    block.src = "./block2.png";
+                    block.style.position = "absolute"
+                    block.style.top = q*size+"px";
+                    block.style.left = i*size+"px"
+                    block.style.height = size+"px"
+                    block.style.width = size+"px"
+                    map.appendChild(block)
+                }
+            }
+        }
     }
 
+    let player = document.createElement("img");
+    player.src = "./playerpng.png";
+    player.style.height = size+"px";
+    player.style.width = size+"px";
+    player.style.position = "absolute"
+    player.style.top = size*9+"px";
+    // player.style.transform = "rotate(45deg)"
+    main.appendChild(player);
 
-    let speed = 1
-    let player = document.getElementById("player")
-    function gravity(){
-        setTimeout(() => {
-            player.style.left = speed+"px"
-            speed += 50
-            console.log("Hi")
-            gravity()
-        }, 500);
+    let mapPos = 0
+    position = 0
+    temp = 0
+    function movement(){
+        if(dead == false){
+            setTimeout(() => {
+                map.style.left = mapPos+"px"
+                mapPos -= 2
+                if(touchingGround == false){
+                    playery = playery + 1;
+                    player.style.top = playery + "px";
+                }else{
+                }
+                if(layers[Math.abs(Math.floor(playery/50))+1][Math.abs(Math.floor(mapPos/50))-1] == 0){
+                    touchingGround = false
+                }else{
+                    touchingGround = true
+                }
+                if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))-1] != 0){
+                    player.src = "./playerdead.png"
+                    dead = true
+                }
+                // console.log(playery)
+                // console.log(Math.abs(Math.floor(playery/50))+1)
+                // console.log(playery+"<"+(Math.abs(Math.floor(playery/50)))*50)
+                if(temp == playery && temp % 50 != 0){
+                    player.src = "./playerdead.png"
+                    dead = true
+                }
+                temp = playery
+                movement()
+            }, 1);
+        }
         
     }
-    gravity()
+    movement()
+    
+    function jump(){
+        if(dead == false){
+            if(touchingGround == true){
+                playery -= size*1.75
+                touchingGround = false
+                reps = 0
+                function smoothJump(){
+                    if(reps < 90){
+                        setTimeout(() => {
+                            rotation += 3
+                        reps += 3
+                            player.style.transform = "rotate("+rotation+"deg)"
+                            // console.log("Rotated");
+                            smoothJump();
+                        }, 0.5);
+                    }
+                }
+                smoothJump()
+                // for(let i = 0; i < 90; i++){
+                //     smoothJump()
+                // }
+            }
+            
+        }
+    }
+
+    document.addEventListener('keydown', logKey);
+    function logKey(e) {
+        if(e.code == "Space"){
+            console.log("SPACEY")
+            jump()
+            }
+        // if(e.code == "KeyL"){
+        //     console.log("Pressed!");
+        //     player.src = Birds[BirdID];
+        //     BirdID = BirdID + 1;
+        //     if(BirdID >= Birds.length){
+        //         BirdID = 0;
+        //     }
+        // }
+    }
+
+    function died(){
+
+    }
 </script>
