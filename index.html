@@ -5,6 +5,7 @@
 <script>
     const main = document.getElementById("main");
     const map = document.getElementById("map");
+    
     let rotation = 0
     let dead = false
     size = 50
@@ -30,7 +31,6 @@
     
     for(let q = 0; q < layers.length; q++){
         for(let i = 0; i < layers[q].length; i++){
-            console.log("UWU")
             if(layers[q][i] == 1){
                 let block = document.createElement("img")
                 block.src = "./block1.png";
@@ -77,19 +77,24 @@
                     player.style.top = playery + "px";
                 }else{
                 }
-                if(layers[Math.abs(Math.floor(playery/50))+1][Math.abs(Math.floor(mapPos/50))-1] == 0){
+                if(layers[Math.abs(Math.floor(playery/50))+1][Math.abs(Math.floor(mapPos/50))-1] == 1){
+                }else{
+                }
+                if(layers[Math.abs(Math.floor(playery/50))+1][Math.abs(Math.floor(mapPos/50))-1] == 0 && layers[Math.abs(Math.floor(playery/50))+1][Math.abs(Math.floor(mapPos/50))] == 0){
                     touchingGround = false
                 }else{
                     touchingGround = true
                 }
-                if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))-1] != 0){
+                // Wall detection
+                if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))-1] != 0 || layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))] != 0){
                     player.src = "./playerdead.png"
                     dead = true
                 }
-                // console.log(playery)
-                // console.log(Math.abs(Math.floor(playery/50))+1)
-                // console.log(playery+"<"+(Math.abs(Math.floor(playery/50)))*50)
-                if(temp == playery && temp % 50 != 0){
+                if(touchingGround == true && Math.floor(playery) % 50 != 0){
+                    player.src = "./playerdead.png"
+                    dead = true
+                }
+                if(temp == Math.floor(playery) && temp % 50 != 0){
                     player.src = "./playerdead.png"
                     dead = true
                 }
@@ -113,15 +118,11 @@
                             rotation += 3
                         reps += 3
                             player.style.transform = "rotate("+rotation+"deg)"
-                            // console.log("Rotated");
                             smoothJump();
                         }, 0.5);
                     }
                 }
                 smoothJump()
-                // for(let i = 0; i < 90; i++){
-                //     smoothJump()
-                // }
             }
             
         }
@@ -130,7 +131,7 @@
     document.addEventListener('keydown', logKey);
     function logKey(e) {
         if(e.code == "Space"){
-            console.log("SPACEY")
+            // console.log("SPACEY")
             jump()
             }
         // if(e.code == "KeyL"){
@@ -146,4 +147,6 @@
     function died(){
 
     }
+    let edit = document.createElement("button")
+    edit.style.position = "absolute"
 </script>
