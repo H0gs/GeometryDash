@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<div id="main" style="position: absolute;"></div>
-<div id="map" style="position: absolute;"></div>
+<div id="main" style="position: fixed; left: 0%;"></div>
+<div id="map" style="position: fixed;"></div>
+<div id="gui"></div>
 <!-- <img id="player" src="./playerpng.png" style="height: 50px; width: 50px; position: absolute; top: 550px;"> -->
 <script>
+    
     const main = document.getElementById("main");
     const map = document.getElementById("map");
-    
+    const gui = document.getElementById("gui")
+    const width = window.innerWidth
+    const height = window.innerHeight
+    let skin = "./playerpng.png"
     let rotation = 0
     let dead = false
     size = 50
     let layers = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
         [1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
         [1, 2, 1, 1, 1, 1, 2, 2, 1, 2, 1, 2, 2, 2, 1, 1, 2, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -27,6 +33,8 @@
     let touchingGround = false
     let playerx = 0
     let playery = 0
+
+    
     
     
     for(let q = 0; q < layers.length; q++){
@@ -56,7 +64,7 @@
     }
 
     let player = document.createElement("img");
-    player.src = "./playerpng.png";
+    player.src = skin;
     player.style.height = size+"px";
     player.style.width = size+"px";
     player.style.position = "absolute"
@@ -87,17 +95,39 @@
                 }
                 // Wall detection
                 if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))-1] != 0 || layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))] != 0){
-                    player.src = "./playerdead.png"
-                    dead = true
+                    if(dead = false){
+                        player.src = "./playerdead.png"
+                        dead = true
+                        died()
+                    }
                 }
                 if(touchingGround == true && Math.floor(playery) % 50 != 0){
-                    player.src = "./playerdead.png"
-                    dead = true
+                    if(dead == false){
+                        player.src = "./playerdead.png"
+                        dead = true
+                        died()
+                    }
                 }
                 if(temp == Math.floor(playery) && temp % 50 != 0){
-                    player.src = "./playerdead.png"
-                    dead = true
+                    if(dead == false){
+                        player.src = "./playerdead.png"
+                        dead = true
+                        died()
+                    }
                 }
+                //Actual wall detetion :|
+                if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))-1] != 0 || layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))] != 0){
+                    if(layers[Math.abs(Math.floor(playery/50))][Math.abs(Math.floor(mapPos/50))] != 0){
+                        if(dead == false){
+                            player.src = "./playerdead.png"
+                            dead = true
+                            died()
+                        }
+
+                    }
+                }
+
+
                 temp = playery
                 movement()
             }, 1);
@@ -116,7 +146,7 @@
                     if(reps < 90){
                         setTimeout(() => {
                             rotation += 3
-                        reps += 3
+                            reps += 3
                             player.style.transform = "rotate("+rotation+"deg)"
                             smoothJump();
                         }, 0.5);
@@ -145,8 +175,92 @@
     }
 
     function died(){
-
+        let again = document.createElement("button")
+        again.innerHTML = "Restart"
+        again.style.width = "75px"
+        again.style.height = "50px"
+        again.style.left = width/2 - parseFloat(again.style.width)/2 +"px"
+        again.style.top = height/2 - parseFloat(again.style.height)/2 + "px"
+        again.style.position = "absolute"
+        main.appendChild(again)
+        again.addEventListener("click", function(){
+            restart()
+            main.removeChild(again);
+        })
     }
+    
     let edit = document.createElement("button")
     edit.style.position = "absolute"
+    edit.style.right = "10%";
+    edit.style.top = "10%";
+    edit.innerHTML = "EDIT";
+    gui.appendChild(edit);
+    edit.addEventListener("click", function(){
+        dead = true
+
+        let editSidebar = document.createElement("div");
+        editSidebar.style.position = "absolute";
+        editSidebar.style.right = "0%"
+        editSidebar.style.top = "0%"
+        editSidebar.style.width = "33%"
+        editSidebar.style.height = "100%"
+        editSidebar.style.backgroundColor = "black";
+        gui.appendChild(editSidebar)
+
+        let right = document.createElement("img");
+        right.style.position = "absolute"
+        right.style.width = "25%"
+        right.style.height = "15%"
+        right.src = "./right.png"
+        right.style.top = "10%"
+        right.style.right = "10%"
+        editSidebar.appendChild(right);
+
+        let left = document.createElement("img")
+        left.style.position = "absolute"
+        left.style.width = "25%"
+        left.style.height = "15%"
+        left.src = "./left.png"
+        left.style.top = "10%"
+        left.style.left = "10%"
+        editSidebar.appendChild(left)
+
+        let currentPos = document.createElement("textarea")
+        currentPos.style.height = "5%"
+        currentPos.style.width = "10%"
+        currentPos.style.position = "absolute";
+        currentPos.style.top = "15%"
+        currentPos.style.left = "45%"
+        currentPos.style.backgroundColor = "white"
+        currentPos.style.resize = "none"
+        currentPos.value = -1*mapPos
+        currentPos.style.textAlign = "center"
+        editSidebar.appendChild(currentPos)
+
+        let displayPos = document.createElement("h1")
+        displayPos.style.color = "white"
+        displayPos.style.position = "absolute"
+        displayPos.style.top = "5%"
+        displayPos.style.left = "32.5%"
+        displayPos.innerHTML = "Map Position: "
+        editSidebar.appendChild(displayPos);
+
+        let apply = document.createElement("button");
+        apply.innerHTML = "Apply Settings";
+        apply.style.top = "90%";
+        apply.style.left = "35%";
+        apply.style.position = "absolute";
+        apply.style.backgroundColor = "white"
+        editSidebar.appendChild(apply)
+        
+    })
+
+    function restart(){
+        mapPos = 0
+        position = 0
+        dead = false
+        movement()
+        player.src = skin
+    }
+
 </script>
