@@ -2,6 +2,7 @@
 <div id="main" style="position: fixed; left: 0%;"></div>
 <div id="map" style="position: fixed;"></div>
 <div id="gui"></div>
+<title>Geometry Dash 2</title>
 <!-- <img id="player" src="./playerpng.png" style="height: 50px; width: 50px; position: absolute; top: 550px;"> -->
 <script>
     
@@ -11,11 +12,12 @@
     const width = window.innerWidth
     const height = window.innerHeight
     let skin = "./playerpng.png"
+    let blocks = ["./block1.png", "./block2.png", "./block3.png"]
     let rotation = 0
     let dead = false
     size = 50
     let layers = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -41,7 +43,7 @@
         for(let i = 0; i < layers[q].length; i++){
             if(layers[q][i] == 1){
                 let block = document.createElement("img")
-                block.src = "./block1.png";
+                block.src = blocks[0];
                 block.style.position = "absolute"
                 block.style.top = q*size+"px";
                 block.style.left = i*size+"px"
@@ -51,13 +53,24 @@
             }else{
                 if(layers[q][i] == 2){
                     let block = document.createElement("img")
-                    block.src = "./block2.png";
+                    block.src = blocks[1];
                     block.style.position = "absolute"
                     block.style.top = q*size+"px";
                     block.style.left = i*size+"px"
                     block.style.height = size+"px"
                     block.style.width = size+"px"
                     map.appendChild(block)
+                }else{
+                    if(layers[q][i] == 3){
+                    let block = document.createElement("img")
+                    block.src = blocks[2];
+                    block.style.position = "absolute"
+                    block.style.top = q*size+"px";
+                    block.style.left = i*size+"px"
+                    block.style.height = size+"px"
+                    block.style.width = size+"px"
+                    map.appendChild(block)
+                }   
                 }
             }
         }
@@ -215,6 +228,7 @@
         right.style.top = "10%"
         right.style.right = "10%"
         editSidebar.appendChild(right);
+        
 
         let left = document.createElement("img")
         left.style.position = "absolute"
@@ -224,6 +238,7 @@
         left.style.top = "10%"
         left.style.left = "10%"
         editSidebar.appendChild(left)
+        
 
         let currentPos = document.createElement("textarea")
         currentPos.style.height = "5%"
@@ -245,13 +260,31 @@
         displayPos.innerHTML = "Map Position: "
         editSidebar.appendChild(displayPos);
 
+        left.addEventListener("click", function(){
+            mapPos += size
+            map.style.left = mapPos + "px"
+            currentPos.value = -1*mapPos
+        })
+
+        right.addEventListener("click", function(){
+            mapPos -= size
+            map.style.left = mapPos + "px"
+            currentPos.value = -1*mapPos
+        })
+
         let apply = document.createElement("button");
-        apply.innerHTML = "Apply Settings";
-        apply.style.top = "90%";
-        apply.style.left = "35%";
+        apply.innerHTML = "Ok";
+        apply.style.top = "22%";
+        apply.style.left = "47%";
         apply.style.position = "absolute";
         apply.style.backgroundColor = "white"
         editSidebar.appendChild(apply)
+        apply.addEventListener("click", function(){
+            mapPos = -1 * parseInt(currentPos.value)
+            map.style.left = mapPos + "px"
+            currentPos.value = -1*mapPos
+        })
+
         
     })
 
